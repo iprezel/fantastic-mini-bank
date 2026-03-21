@@ -1,13 +1,16 @@
 import random
+import json
 from model.account import Account
 class Bank:    
     def __init__(self):
         self.accounts = {}
+        self.readAccounts()
 
     def generateAccountNumber(self):
         countryCode="PL"
         checkDigitals = str(random.randint(10,99))
         accountNumbers = ''.join(str(random.randint(0,9)) for i in range(24))
+        #to do check unique number
         return "{}{}{}".format(countryCode, checkDigitals, accountNumbers)
     
     def getAccount(self, account_id):
@@ -15,7 +18,7 @@ class Bank:
     
     def createAccount(self, name):
         accountId = self.generateAccountNumber()
-        self.accounts[accountId] = Account(accountId, name)
+        acc = Account(accountId, name)
         return accountId
 
     def tranfer(self, from_id, to_id,amount):
@@ -35,6 +38,25 @@ class Bank:
         account = self.getAccount(acc)
         account.deposit(figure)
 
+    def saveAccounts(self):
+        data = {
+            "accounts": [
+                {
+                    "id": acc.id,
+                    "owner": acc.owner,
+                    "balance": acc.balance
+                }
+                for acc in self.accounts.values()
+            ]
+        }
+
+        with open("bankSystem/data/bankData.json", "w") as f:
+            json.dump(data, f, indent=4)
+
+    def readAccounts(self):
+        with open("bankSystem/data/bankData.json", "r") as file:
+            self.accounts = json.load(file)
+
     def makeWithdraw(self, acc, figure):
         account = self.getAccount(acc)
         account.withdraw(figure)
@@ -45,3 +67,8 @@ class Bank:
 
     def printBankAccountNumber(self, acc):
         print("Your bank account number: {}".format(acc))
+
+    def close(self):
+        print(self.accounts.values())
+        self.saveAccounts()
+        print("Goodbye, see you soon!")

@@ -22,4 +22,5 @@ while(running):
     elif getInput == 3:
         bankApp.printBankAccountNumber(acc_id)
     elif getInput == 4:
+        bankApp.close()
         running = False
