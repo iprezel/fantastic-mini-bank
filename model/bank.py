@@ -3,7 +3,7 @@ import json
 from model.account import Account
 class Bank:    
     def __init__(self):
-        self.accounts = {}
+        self.accounts = []
         self.readAccounts()
 
     def generateAccountNumber(self):
@@ -14,11 +14,21 @@ class Bank:
         return "{}{}{}".format(countryCode, checkDigitals, accountNumbers)
     
     def getAccount(self, account_id):
-        return self.accounts.get(account_id)
+        #obsluga bledu braku konta o account_id 
+        for acc in self.accounts:
+            actual_id = acc.getAccountNumber()
+            if account_id == actual_id:
+                return acc
+        print("Account doesn't exists.")
+        return None
     
+    def addAccount(self, acc):
+        self.accounts.append(acc)
+
     def createAccount(self, name):
         accountId = self.generateAccountNumber()
         acc = Account(accountId, name)
+        self.addAccount(acc)
         return accountId
 
     def tranfer(self, from_id, to_id,amount):
@@ -38,24 +48,11 @@ class Bank:
         account = self.getAccount(acc)
         account.deposit(figure)
 
-    def saveAccounts(self):
-        data = {
-            "accounts": [
-                {
-                    "id": acc.id,
-                    "owner": acc.owner,
-                    "balance": acc.balance
-                }
-                for acc in self.accounts.values()
-            ]
-        }
-
-        with open("bankSystem/data/bankData.json", "w") as f:
-            json.dump(data, f, indent=4)
 
     def readAccounts(self):
-        with open("bankSystem/data/bankData.json", "r") as file:
-            self.accounts = json.load(file)
+        with open("data/bankData.json", "r") as file:
+            data = json.load(file)
+            self.accounts = [Account(acc["id"], acc["name"], acc["balance"]) for acc in data] 
 
     def makeWithdraw(self, acc, figure):
         account = self.getAccount(acc)
@@ -69,6 +66,9 @@ class Bank:
         print("Your bank account number: {}".format(acc))
 
     def close(self):
-        print(self.accounts.values())
-        self.saveAccounts()
+        data = []
+        for acc in self.accounts:
+            data.append(acc.saveAccount())
+        with open("data/bankData.json", "w") as f:
+            json.dump(data, f, indent=4)
         print("Goodbye, see you soon!")

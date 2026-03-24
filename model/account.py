@@ -1,3 +1,4 @@
+import json
 class Account:
     def __init__(self, accountId, name, balance=0):
         self.accountNumber = accountId
@@ -17,3 +18,13 @@ class Account:
         else:
             print("Invalid Operation!")
         return -1
+    def getAccountNumber(self):
+        return self.accountNumber
+    def saveAccount(self):
+        return {
+                    "id": self.accountNumber,
+                    "name": self.name,
+                    "balance": self.balance
+                }            
+
+
