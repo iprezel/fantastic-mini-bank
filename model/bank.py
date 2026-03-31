@@ -60,7 +60,7 @@ class Bank:
 
     def printInfo(self, acc):
         account = self.getAccount(acc)
-        print("Hi {}.\n You have ${}.\n Select option:\n 1) Deposit, 2) Withdraw, 3) Get your bank account 4) exit".format(account.name, account.balance))
+        print("Hi {}.\n You have ${}.\n Select option:\n 1) Deposit, 2) Withdraw, 3) Get your bank account 4) Make transfer 5) exit".format(account.name, account.balance))
 
     def printBankAccountNumber(self, acc):
         print("Your bank account number: {}".format(acc))

@@ -22,5 +22,9 @@ while(running):
     elif getInput == 3:
         bankApp.printBankAccountNumber(acc_id)
     elif getInput == 4:
+        sender_id =  str(input("Enter the sender id: "))
+        figure = int(input("How much you want to transfer?: "))
+        bankApp.tranfer(acc_id, sender_id, figure)
+    elif getInput == 5:
         bankApp.close()
         running = False
